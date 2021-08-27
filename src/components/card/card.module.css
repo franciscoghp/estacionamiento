@@ -1,0 +1,43 @@
+.card {
+    list-style: none;
+
+}
+
+.available {
+    border-radius: 10px;
+    background-color: green;
+    min-block-size: 200px;
+    color: white;
+    width: 60%;
+    font-size: 3.5rem;
+}
+
+.available:hover {
+    opacity: 0.8
+}
+
+.occupied {
+    border-radius: 10px;
+    background-color: red;
+    min-block-size: 200px;
+    color: white;
+    width: 60%;
+    font-size: 3.5rem;
+}
+
+.occupied:hover {
+    opacity: 0.8
+}
+
+.reserved {
+    border-radius: 10px;
+    background-color: #e2e216;
+    min-block-size: 200px;
+    color: white;
+    width: 60%;
+    font-size: 3.5rem;
+}
+
+.reserved:hover {
+    opacity: 0.8
+}
