@@ -38,8 +38,6 @@ function Card({puesto ,index, cargarPuestos}) {
                 reserved: false
             })
             if(res.status === 200) {
-                const fechaEntrada = JSON.parse(res.data.puesto.fechaEntrada)
-                console.log(fechaEntrada)
                 messageSuccess('El puesto ahora está ocupado.');
                 cargarPuestos()
             }else messageError('Hubo un error.');
@@ -58,12 +56,11 @@ function Card({puesto ,index, cargarPuestos}) {
             if(res.status === 200) {
                 const fechaSalida = JSON.parse(res.data.puesto.fechaSalida)
                 const fechaEntrada = JSON.parse(puesto.fechaEntrada)
-                const {monto , difSegundosReal} = getMonto(fechaSalida, fechaEntrada) 
+                const monto = getMonto(fechaSalida, fechaEntrada) 
 
                 const outFactura = renderSalida(fechaSalida)
-                const inFactura = renderEntrada(fechaEntrada, difSegundosReal)
-                console.log(outFactura)
-                console.log(inFactura)
+                const inFactura = renderEntrada(fechaEntrada)
+
                 factura(monto, inFactura, outFactura );
                 cargarPuestos()
             }else messageError('Hubo un error.');
@@ -152,8 +149,6 @@ function Card({puesto ,index, cargarPuestos}) {
         if(fechaSalida.segundo < 10) segundoRender = `0${fechaSalida.segundo}`
         else segundoRender = `${fechaSalida.segundo}`
 
-        console.log(difSegundosReal)
-
         let outFactura = `${diaRender}-${mesRender}-${yearRender}:${horaRender}:${minutoRender}:${segundoRender}`
         return outFactura
     }
@@ -166,42 +161,33 @@ function Card({puesto ,index, cargarPuestos}) {
         const difMinutosReal = (difHora*60) + ( minutosSalida - minutosEntrada )
         const difSegundosReal = difMinutosReal*60 + ( segundosSalida - segundosEntrada )
 
-        console.log(difMinutosReal, 'minutos reales')
-        console.log(difSegundosReal, ' segundos reales')
-        if( difSegundosReal < 60 ) {
-            console.log('horas menor a 1 hora.... minuto')
+        if( difSegundosReal < 60 ) { // ('horas menor a 1 hora.... minuto')
             monto = difSegundosReal*0.0005
         }
-        else if( difSegundosReal >= 60 && difSegundosReal <= 180 ) {
-            console.log('horas entre 1 hora y 3 horas.... minutos')
+        else if( difSegundosReal >= 60 && difSegundosReal <= 180 ) { // ('horas entre 1 hora y 3 horas.... minutos')
+           
             for( let i = 0 ; i <= difSegundosReal; i++){
                 if( Number.isInteger( i/2 )){
-                    console.log('el', i,'es par' )
                     monto = monto + i*0.0003
                 }else {
-                    console.log('el', i,'es impar' )
                     monto = monto + i*0.0001
                 }
             }
-        }else if(difSegundosReal > 180){
-            console.log('horas mas de 3 horas.... minutos')
+        }else if(difSegundosReal > 180){// ('horas mas de 3 horas.... minutos')
+            
             if( difSegundosReal <= 360 ){
                 for( let i = 0 ; i <= difSegundosReal; i++){
                     if( Number.isInteger( i/2 )){
-                        console.log('el', i,'es par' )
                         monto = monto + i*0.0003
                     }else {
-                        console.log('el', i,'es impar' )
                         monto = monto + i*0.0001
                     }
                 }
             }else{
                 for( let i = 0 ; i <= difSegundosReal; i++){
                     if( Number.isInteger( i/2 )){
-                        console.log('el', i,'es par' )
                         monto = monto + i*0.0003
                     }else {
-                        console.log('el', i,'es impar' )
                         monto = monto + i*0.0001
                     }
                 }
@@ -209,11 +195,7 @@ function Card({puesto ,index, cargarPuestos}) {
                 monto = monto + monto*0.003
             }
         }
-
-        console.log( horaEntrada, minutosEntrada, segundosEntrada , 'entrada')
-        console.log( horaSalida, minutosSalida, segundosSalida , 'salida')
-        console.log(monto)
-        return {monto, difSegundosReal}
+        return monto
     }
 
     const reservar = async () =>{
@@ -227,7 +209,6 @@ function Card({puesto ,index, cargarPuestos}) {
                 diasOcupado: days
             })
             if(res.status === 200) {
-                console.log(res)
                 cargarPuestos()
                 codigoValidacion(puesto.id, days);
             }else messageError('Hubo un error.');

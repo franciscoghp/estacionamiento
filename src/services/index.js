@@ -28,15 +28,14 @@ export async function postPuestos (){
 }
 
 export async function putPuesto (id, data){
-    // try {
-    //     const res = await axios.put(`${baseUrl}/puestos/` + id, data)
-    //     return res
-    // } catch (error) {
-    //     console.log(error)
-    // }
-      const res = await axios.put(`${baseUrl}/puestos/` + id, data)
-      console.log(res)
-      return res
+    try {
+        const res = await axios.put(`${baseUrl}/puestos/` + id, data)
+        return res
+    } catch (error) {
+        console.log(error)
+    }
+      // const res = await axios.put(`${baseUrl}/puestos/` + id, data)
+      // return res
 }
 
 export async function eliminarPuesto (id, data){
